@@ -45,7 +45,7 @@ export const typeDefs = gql`
     # Type for a Conversation
     type Conversation {
         id:ID!
-        users:[String]!,
+        users:[User!]!,
         createdAt: DateTime
         updatedAt: DateTime
     }

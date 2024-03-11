@@ -34,7 +34,26 @@ export const resolvers = {
             return dataSources.messageAPI.getMessages(conversationId);
         },
         Conversations: async(_, {userId}, {dataSources}) => {
-            return dataSources.messageAPI.getConversations(userId);
+            const conversations = await dataSources.messageAPI.getConversations(userId);
+
+            const mappedConversations = await Promise.all(conversations.map(async (conversation) => {
+                const filteredUsers = conversation.users.filter((user)=> user !== userId);
+                const mappedUsers = await Promise.all(filteredUsers.map(async (user) => {
+                  if(user !== userId){
+                    const fetchedUser = await UserModel.findOne({ _id: user });
+                    return fetchedUser;
+                  }
+                }));
+            
+                return {
+                  id: conversation._doc._id,
+                  users: mappedUsers,
+                  createdAt: conversation._doc.createdAt,
+                  updatedAt: conversation._doc.updatedAt
+                };
+            }));
+
+            return mappedConversations;
         }
     },
     Mutation: {
@@ -68,7 +87,6 @@ export const resolvers = {
             }            
         },
         addMessage: async (_, {messageInput}) => {
-            console.log(messageInput)
             pubsub.publish('MESSAGE_ADDED', {messageAdded:messageInput})
             try {
                 const message = new MessageModel({

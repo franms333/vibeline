@@ -3,9 +3,6 @@
 import mongoose from 'mongoose';
 import { ApolloServer } from '@apollo/server';
 
-// Import for test with startStandAloneServer
-// import { startStandaloneServer } from '@apollo/server/standalone';
-
 // Imports for typedefs, resolvers and dataSources
 import { typeDefs } from "./schema.js";
 import { resolvers } from "./resolvers.js";
