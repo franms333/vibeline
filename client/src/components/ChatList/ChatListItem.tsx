@@ -1,8 +1,16 @@
+import { Conversation } from '../../App';
 import UserPic from '../../assets/profile_pic.jpg';
 
-const ChatListItem = () => {
+type ChatListItemProps = {
+    chatItem: Conversation;
+    onSelectedItem: (chat:Conversation) => void;
+}
+
+const ChatListItem = ({chatItem ,onSelectedItem}:ChatListItemProps) => {
     return ( 
-        <li className="flex items-center gap-4 max-h-14 py-8 pl-5 pr-6 cursor-pointer hover:bg-gray-200">
+        <li 
+        onClick={()=>onSelectedItem(chatItem)}
+        className="flex items-center gap-4 max-h-14 py-8 pl-5 pr-6 cursor-pointer hover:bg-gray-200">
             <img src={UserPic} alt="User Picture" className='rounded-full w-10 h-10 object-cover' />
 
 
