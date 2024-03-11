@@ -26,7 +26,6 @@ const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
     const [addMessage, {data}] = useMutation(ADD_MESSAGE);
 
     function handleNewMessage() {
-        console.log(messageRef.current?.value)
         addMessage({ variables: { messageInput: {
                     text: messageRef.current?.value,
                     userId: user,

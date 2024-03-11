@@ -6,7 +6,7 @@ import { gql, useQuery } from "@apollo/client";
 
 type ChatListProps = {
     onChatSelected: (chat:Conversation) => void;
-    user: String;
+    user: string;
 }
 
 const ChatList = ({user, onChatSelected}:ChatListProps) => {
@@ -17,6 +17,11 @@ const ChatList = ({user, onChatSelected}:ChatListProps) => {
                 id
                 createdAt
                 updatedAt
+                users {
+                    id
+                    profilePic
+                    username
+                }
             }
         }
     `;

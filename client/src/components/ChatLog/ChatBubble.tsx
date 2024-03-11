@@ -1,18 +1,26 @@
+import { Conversation } from "../../App";
+import { Message } from "../ChatLog";
+
 type ChatBubbleProps = {
-    userType:String,
-    message:String
+    activeChat:Conversation,
+    loggedUser:String,
+    message:Message
 }
 
-const ChatBubble = ({userType, message}:ChatBubbleProps) => {
+const ChatBubble = ({activeChat ,loggedUser, message}:ChatBubbleProps) => {
     return ( 
-        <div className={`chat ${userType === 'logged' ? 'chat-end' : 'chat-start'}`}>
+        <div className={`chat ${message.userId !== loggedUser ? 'chat-start' : 'chat-end'}`}>
+            {message.userId !== loggedUser &&
+            <div className="chat-image avatar">
+                <div className="w-10 rounded-full">
+                    <img alt="Tailwind CSS chat bubble component" src={activeChat.users[0].profilePic} />
+                </div>
+            </div>
+            }
             <div className="chat-header">
                 <time className="text-xs opacity-50 mx-1">12:46</time>
             </div>
-            <div className="chat-bubble bg-gray-100 text-black">{message}</div>
-            {/* <div className="chat-footer opacity-50">
-                Seen at 12:46
-            </div> */}
+            <div className="chat-bubble bg-gray-100 text-black">{message.text}</div>
         </div>
     );
 }

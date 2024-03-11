@@ -4,23 +4,30 @@ import ChatList from './components/ChatList';
 import ChatLog from './components/ChatLog';
 import SideMenu from './components/SideMenu';
 
+export type User = {
+  id:string;
+  username:string;
+  profilePic:string;
+}
+
 export type Conversation = {
   id:string;
+  users: User[];
   createdAt:string;
   updatedAt:string;
   __typename:string
 }
 
 function App() { 
-  const [user, setUser] = useState<String>('');
-  const [activeChatId, setActiveChatId] = useState<String>('');
+  const [user, setUser] = useState<string>('');
+  const [activeChat, setActiveChat] = useState<Conversation>();
 
   useEffect(()=>{
     setUser('65ea5ca7aa69acc599ded3bd');
   },[]);
 
   function handleChatSelected(chat:Conversation) {
-    setActiveChatId(chat.id);
+    setActiveChat(chat);
   }
 
   return (
@@ -31,9 +38,9 @@ function App() {
         <ChatList 
         onChatSelected={handleChatSelected}
         user={user}/>
-        <ChatLog 
-        activeChatId={activeChatId}
-        user={user}/>
+        {activeChat && <ChatLog 
+        activeChat={activeChat}
+        user={user}/>}
       </section>
     </main>
   )

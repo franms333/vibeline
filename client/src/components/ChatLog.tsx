@@ -1,27 +1,29 @@
-import { gql, useApolloClient, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 import ChatBubble from "./ChatLog/ChatBubble";
 import ChatLogHeader from "./ChatLog/ChatLogHeader";
 import MessageTextArea from "./ChatLog/MessageTextArea";
-import { useEffect, useState } from "react";
+import { Conversation } from "../App";
 
 type ChatLogProps = {
-    activeChatId: String,
-    user: String
+    activeChat: Conversation,
+    user: string
 }
 
-type Message = {
-    id: String,
-    conversationId: String,
-    userId: String,
-    text: String,
-    createdAt: String,
-    updatedAt: String
+export type Message = {
+    id: string,
+    conversationId: string,
+    userId: string,
+    text: string,
+    createdAt: string,
+    updatedAt: string
 }
 
-const ChatLog = ({activeChatId, user}:ChatLogProps) => {
+const ChatLog = ({activeChat, user}:ChatLogProps) => {
     const client = useApolloClient();
 
     const [log, setLog] = useState<Message[]>([]);
+    // Query for getting all messages on clicked conversation
     const GET_MESSAGES = gql`
         query Query($conversationId: ID!) {
             Messages(conversationId: $conversationId) {
@@ -47,41 +49,40 @@ const ChatLog = ({activeChatId, user}:ChatLogProps) => {
 
     const {data, subscribeToMore} = useQuery(
         GET_MESSAGES,
-        { variables: { conversationId: activeChatId } }
+        { variables: { conversationId: activeChat.id } }
     );
     
 
     useEffect(()=>{
         if(data){
-            console.log(data);
             setLog(data.Messages);
         }
 
-        // debugger
         const unsubscribe = subscribeToMore({
             document:MESSAGE_SUBSCRIPTION,
             updateQuery: (previousQueryResult, { subscriptionData }) => {
-                if (!subscriptionData.data) return previousQueryResult;
                 const newMessage = subscriptionData.data.messageAdded;
 
-                return Object.assign({}, previousQueryResult, {
-                    Messages: {
-                        Messages: [newMessage, ...previousQueryResult.Messages]
+                client.cache.writeQuery({
+                    query: GET_MESSAGES,
+                    data: {
+                      ...previousQueryResult,
+                      Messages: [newMessage, ...previousQueryResult.Messages]
+                    },
+                    variables: {
+                        conversationId: subscriptionData.data.messageAdded.conversationId
                     }
                 });
             }
         })
-        console.log(data);
 
         return unsubscribe
     },[data]);
-
-    // Subscription
     
 
     return ( 
         <section className='flex flex-col'>
-            {log.length > 0 && <ChatLogHeader />}
+            <ChatLogHeader activeChat={activeChat}/>
 
             <div 
             className="grow flex flex-col h-1 overflow-y-auto px-20 pb-4
@@ -89,20 +90,16 @@ const ChatLog = ({activeChatId, user}:ChatLogProps) => {
                 
                 {log.length > 0 && log.map((message)=>(
                     <ChatBubble 
-                    message={message.text}
-                    userType="logged"/>
+                    activeChat={activeChat}
+                    message={message}
+                    loggedUser={user}/>
                 ))}
-
-                {/* <ChatBubble 
-                userType="logged"/>
-                <ChatBubble 
-                userType="other"/> */}
                 
             </div>
-            {log.length > 0 && 
+             
             <MessageTextArea 
-            activeChatId={activeChatId}
-            user={user}/>}
+            activeChatId={activeChat.id}
+            user={user}/>
         </section>
     );
 }
