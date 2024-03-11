@@ -9,13 +9,6 @@ import { PubSub } from 'graphql-subscriptions';
 // // Instance of PubSub class for working with subscriptions
 const pubsub = new PubSub();
 
-let currentNumber = 0;
-function incrementNumber() {
-    currentNumber++;
-    pubsub.publish('NUMBER_INCREMENTED', { numberIncremented: currentNumber });
-    setTimeout(incrementNumber, 1000);
-}
-
 export const resolvers = {
     Query: {
         login: async(_, {username}) => {
@@ -77,8 +70,6 @@ export const resolvers = {
         addMessage: async (_, {messageInput}) => {
             console.log(messageInput)
             pubsub.publish('MESSAGE_ADDED', {messageAdded:messageInput})
-            // console.log(pubsub);
-            // incrementNumber(pubsub);
             try {
                 const message = new MessageModel({
                     text:messageInput.text,
@@ -94,15 +85,7 @@ export const resolvers = {
     },
     Subscription: {
         messageAdded: {
-            // esto funciona ↓↓↓
-            // subscribe: () => pubsub.asyncIterator(['NUMBER_INCREMENTED'])
-
-
             subscribe: () => pubsub.asyncIterator(['MESSAGE_ADDED'])
-            // resolve: (payload) => {
-            //     console.log(payload);
-            // }
-            // subscribe: () => pubsub.asyncIterator(['MESSAGE_ADDED'])
         }
     }
 }

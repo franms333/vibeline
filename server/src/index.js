@@ -23,12 +23,6 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
-// Imports for Subscription
-// import { PubSub } from 'graphql-subscriptions';
-
-// Instance of PubSub class for working with subscriptions
-// const pubsub = new PubSub();
-
 // Initialize Express Server
 export const app = express();
 const httpServer = createServer(app);
@@ -39,7 +33,6 @@ const wsServer = new WebSocketServer({
     server: httpServer,
     // Pass a different path here if app.use
     // serves expressMiddleware at a different path
-    // path: '/subscriptions',
     path: '/graphql'
 });
 
@@ -48,19 +41,6 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 // Hand in the schema we just created and have the
 // WebSocketServer start listening.
 const serverCleanup = useServer({ schema }, wsServer);
-
-// Disable CORS
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     if(req.method === 'OPTIONS'){
-//         return res.sendStatus(200);
-//     }
-//     next();
-// })
-
-// Create ApolloServer Instance
 
 const server = new ApolloServer({
     typeDefs,
@@ -91,28 +71,6 @@ const connectDB = async () => {
         console.log(error);
     }
 }
-
-// Test with startStandaloneServer graphql function
-// async function startApolloServer(){
-//     const server = new ApolloServer({typeDefs, resolvers});
-
-//     const { url } = await startStandaloneServer(server, {
-//         context: async () => {
-//           const { cache } = server;
-    
-//           return {
-//             dataSources: {
-//               messageAPI: new MessageAPI({ cache }),
-//             },
-//           };
-//         }
-//     });
-
-//     console.log(`
-//         🚀  Server is running
-//         📭  Query at ${url}
-//     `);
-// }
 
 async function startApolloServer(){
     await server.start();

@@ -22,7 +22,7 @@ export const typeDefs = gql`
     }
 
     type Subscription {
-        # numberIncremented: Int
+        # Subscription when new message is added into conversation
         messageAdded: SubsMessage
     }
 
