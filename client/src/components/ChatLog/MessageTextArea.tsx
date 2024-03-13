@@ -32,7 +32,9 @@ const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
                     conversationId: activeChatId
                 } 
             } 
-        })
+        });
+
+        messageRef.current!.value = '';
     }
 
     return ( 
@@ -40,6 +42,12 @@ const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
             <FiPaperclip className="text-3xl text-gray-500 mr-4 cursor-pointer transition-colors duration-100 hover:text-gray-600"/>
             <textarea
             ref={messageRef} 
+            onKeyDown={(event)=>{
+                if(event.key === 'Enter' && !event.shiftKey){
+                    event.preventDefault();
+                    handleNewMessage()
+                }
+            }}
             rows={3} 
             className="grow outline-none bg-gray-100 p-2 pl-4 rounded-2xl resize-none
             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full" 
