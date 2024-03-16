@@ -1,9 +1,10 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import { Conversation } from "../App";
+import { GET_MESSAGES, MESSAGE_SUBSCRIPTION } from "../services/ServiceCalls";
 import ChatBubble from "./ChatLog/ChatBubble";
 import ChatLogHeader from "./ChatLog/ChatLogHeader";
 import MessageTextArea from "./ChatLog/MessageTextArea";
-import { Conversation } from "../App";
 
 type ChatLogProps = {
     activeChat: Conversation,
@@ -19,36 +20,20 @@ export type Message = {
     updatedAt: string
 }
 
+// Query for getting all messages on clicked conversation
+const FETCH_MESSAGES = GET_MESSAGES();
+
+// Subscription for when a new message is added
+const SUBSCRIPTION = MESSAGE_SUBSCRIPTION();
+
 const ChatLog = ({activeChat, user}:ChatLogProps) => {
     const client = useApolloClient();
 
-    const [log, setLog] = useState<Message[]>([]);
-    // Query for getting all messages on clicked conversation
-    const GET_MESSAGES = gql`
-        query Query($conversationId: ID!) {
-            Messages(conversationId: $conversationId) {
-                id
-                conversationId
-                userId
-                text
-                createdAt
-                updatedAt
-            }
-        }
-    `;
-    // Subscription
-    const MESSAGE_SUBSCRIPTION = gql`
-        subscription Subscription {
-            messageAdded {
-                text
-                userId
-                conversationId
-            }
-        }
-    `;
+    const [log, setLog] = useState<Message[]>([]);     
 
+    // Query for getting messages
     const {data, subscribeToMore} = useQuery(
-        GET_MESSAGES,
+        FETCH_MESSAGES,
         { variables: { conversationId: activeChat.id } }
     );
     
@@ -59,12 +44,12 @@ const ChatLog = ({activeChat, user}:ChatLogProps) => {
         }
 
         const unsubscribe = subscribeToMore({
-            document:MESSAGE_SUBSCRIPTION,
+            document:SUBSCRIPTION,
             updateQuery: (previousQueryResult, { subscriptionData }) => {
                 const newMessage = subscriptionData.data.messageAdded;
 
                 client.cache.writeQuery({
-                    query: GET_MESSAGES,
+                    query: FETCH_MESSAGES,
                     data: {
                       ...previousQueryResult,
                       Messages: [newMessage, ...previousQueryResult.Messages]
@@ -90,6 +75,7 @@ const ChatLog = ({activeChat, user}:ChatLogProps) => {
                 
                 {log.length > 0 && log.map((message)=>(
                     <ChatBubble 
+                    key={message.id}
                     activeChat={activeChat}
                     message={message}
                     loggedUser={user}/>

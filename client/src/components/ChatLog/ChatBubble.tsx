@@ -20,7 +20,7 @@ const ChatBubble = ({activeChat ,loggedUser, message}:ChatBubbleProps) => {
             <div className="chat-header">
                 <time className="text-xs opacity-50 mx-1">12:46</time>
             </div>
-            <div className="chat-bubble bg-gray-100 text-black">{message.text}</div>
+            <div className="chat-bubble bg-gray-300 text-black">{message.text}</div>
         </div>
     );
 }

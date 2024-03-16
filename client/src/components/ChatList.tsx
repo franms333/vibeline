@@ -1,8 +1,9 @@
-import ListHeader from "./ChatList/ListHeader";
-import ChatListItem from "./ChatList/ChatListItem";
-import { Conversation } from "../App";
+import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { Conversation } from "../App";
+import { GET_CONVERSATIONS } from "../services/ServiceCalls";
+import ChatListItem from "./ChatList/ChatListItem";
+import ListHeader from "./ChatList/ListHeader";
 
 type ChatListProps = {
     onChatSelected: (chat:Conversation) => void;
@@ -11,22 +12,9 @@ type ChatListProps = {
 
 const ChatList = ({user, onChatSelected}:ChatListProps) => {
     const [chats, setChats] = useState<Conversation[]>([]);
-    const CONVERSATIONS = gql`
-        query {
-            Conversations(userId: "${user}") {
-                id
-                createdAt
-                updatedAt
-                users {
-                    id
-                    profilePic
-                    username
-                }
-            }
-        }
-    `;
+    const FETCH_CONVERSATIONS = GET_CONVERSATIONS(user);
 
-    const {data} = useQuery(CONVERSATIONS);
+    const {data} = useQuery(FETCH_CONVERSATIONS);
 
     useEffect(()=>{
         if(data){

@@ -1,29 +1,18 @@
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useRef } from "react";
 import { FiPaperclip } from "react-icons/fi";
+import { ADD_MESSAGE } from "../../services/ServiceCalls";
 
 type MessageTextAreaProps = {
     activeChatId: String,
     user: String
 }
-
-const ADD_MESSAGE = gql`
-    mutation Mutation($messageInput: MessageInput!) {
-        addMessage(messageInput: $messageInput) {
-            id
-            conversationId
-            userId
-            text
-            createdAt
-            updatedAt
-        }
-    }
-`
+const POST_MESSAGE = ADD_MESSAGE();
 
 const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
     const messageRef = useRef<HTMLTextAreaElement>(null);
-
-    const [addMessage, {data}] = useMutation(ADD_MESSAGE);
+    
+    const [addMessage, {data}] = useMutation(POST_MESSAGE);
 
     function handleNewMessage() {
         addMessage({ variables: { messageInput: {
@@ -38,7 +27,7 @@ const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
     }
 
     return ( 
-        <section className="flex items-center w-full border-t border-gray-200 py-4 px-4 mt-auto">
+        <section className="flex items-center w-full border-t border-gray-300 py-4 px-4 mt-auto">
             <FiPaperclip className="text-3xl text-gray-500 mr-4 cursor-pointer transition-colors duration-100 hover:text-gray-600"/>
             <textarea
             ref={messageRef} 
@@ -50,6 +39,7 @@ const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
             }}
             rows={3} 
             className="grow outline-none bg-gray-100 p-2 pl-4 rounded-2xl resize-none
+            focus:bg-gray-300
             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full" 
             placeholder="Type your message here..."/>
             <p
