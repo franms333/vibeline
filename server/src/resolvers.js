@@ -34,7 +34,7 @@ export const resolvers = {
             return dataSources.messageAPI.getMessages(conversationId);
         },
         Conversations: async(_, {userId}, {dataSources}) => {
-            const conversations = await dataSources.messageAPI.getConversations(userId);
+            const conversations = await dataSources.messageAPI.getConversations(userId);            
 
             const mappedConversations = await Promise.all(conversations.map(async (conversation) => {
                 const filteredUsers = conversation.users.filter((user)=> user !== userId);
@@ -44,16 +44,20 @@ export const resolvers = {
                     return fetchedUser;
                   }
                 }));
-            
+                
                 return {
-                  id: conversation._doc._id,
+                  id: conversation._id,
                   users: mappedUsers,
-                  createdAt: conversation._doc.createdAt,
-                  updatedAt: conversation._doc.updatedAt
+                  createdAt: conversation.createdAt,
+                  updatedAt: conversation.updatedAt,
+                  lastMessage: conversation.lastMessage
                 };
             }));
-
+                        
             return mappedConversations;
+        },
+        Conversation: async(_, {conversationId}, {dataSources}) => {
+            return dataSources.messageAPI.getConversation(conversationId);
         }
     },
     Mutation: {
@@ -87,7 +91,13 @@ export const resolvers = {
             }            
         },
         addMessage: async (_, {messageInput}) => {
-            pubsub.publish('MESSAGE_ADDED', {messageAdded:messageInput})
+            // Model for Message Subscription
+            pubsub.publish('MESSAGE_ADDED', {messageAdded:{
+                ...messageInput,
+                createdAt:new Date()
+            }});
+
+            // Model and Operation for saving the message in the MongoDB Database
             try {
                 const message = new MessageModel({
                     text:messageInput.text,

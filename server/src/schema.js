@@ -11,6 +11,9 @@ export const typeDefs = gql`
 
         # Query for getting all conversations where an user is involved
         Conversations(userId: ID!): [Conversation!]!
+
+        # Query for getting one conversation
+        Conversation(conversationId: ID!): Conversation
     }
     type Mutation {
         # Mutation for creating a user
@@ -30,6 +33,7 @@ export const typeDefs = gql`
         text:String!,
         userId:String!,
         conversationId:String!
+        createdAt: DateTime!
     }
 
     # Type for a Message
@@ -46,6 +50,7 @@ export const typeDefs = gql`
     type Conversation {
         id:ID!
         users:[User!]!,
+        lastMessage:Message
         createdAt: DateTime
         updatedAt: DateTime
     }
