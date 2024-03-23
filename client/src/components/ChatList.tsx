@@ -1,27 +1,10 @@
-import { useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { Conversation } from "../App";
-import { GET_CONVERSATIONS } from "../services/ServiceCalls";
+import useConversationStore from "../store/conversation-store";
 import ChatListItem from "./ChatList/ChatListItem";
 import ListHeader from "./ChatList/ListHeader";
 
-type ChatListProps = {
-    onChatSelected: (chat:Conversation) => void;
-    user: string;
-}
-
-const ChatList = ({user, onChatSelected}:ChatListProps) => {
-    const [chats, setChats] = useState<Conversation[]>([]);
-    const FETCH_CONVERSATIONS = GET_CONVERSATIONS(user);
-
-    const {data} = useQuery(FETCH_CONVERSATIONS);
-
-    useEffect(()=>{
-        if(data){
-            setChats(data.Conversations)
-        }
-    },[data])
-
+const ChatList = () => {
+    const Chats = useConversationStore((state) => state.conversations);
+    
     return ( 
         <section className="flex flex-col border-r border-gray-200">
 
@@ -30,10 +13,9 @@ const ChatList = ({user, onChatSelected}:ChatListProps) => {
             <div className="flex flex-col mt-6 h-1 grow overflow-y-auto 
             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full">
                 <ul>
-                    {chats && chats.map((chat)=>(
+                    {Chats.length > 0 && Chats.map((chat)=>(
                         <ChatListItem
                         key={chat.id}
-                        onSelectedItem={onChatSelected}
                         chatItem={chat} 
                         />
                     ))}

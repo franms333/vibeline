@@ -2,14 +2,16 @@ import { useMutation } from "@apollo/client";
 import { useRef } from "react";
 import { FiPaperclip } from "react-icons/fi";
 import { ADD_MESSAGE } from "../../services/ServiceCalls";
+import useConversationStore from "../../store/conversation-store";
 
-type MessageTextAreaProps = {
-    activeChatId: String,
-    user: String
-}
 const POST_MESSAGE = ADD_MESSAGE();
 
-const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
+const MessageTextArea = () => {
+    // Global State of Logged in User
+    const loggedUser = useConversationStore((state) => state.loggedUser);
+    // Global State of Active Chat
+    const activeChat = useConversationStore((state) => state.activeChat);
+
     const messageRef = useRef<HTMLTextAreaElement>(null);
     
     const [addMessage, {data}] = useMutation(POST_MESSAGE);
@@ -17,8 +19,8 @@ const MessageTextArea = ({activeChatId, user}:MessageTextAreaProps) => {
     function handleNewMessage() {
         addMessage({ variables: { messageInput: {
                     text: messageRef.current?.value,
-                    userId: user,
-                    conversationId: activeChatId
+                    userId: loggedUser,
+                    conversationId: activeChat?.id
                 } 
             } 
         });

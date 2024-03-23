@@ -1,19 +1,16 @@
 import { CiCircleInfo } from "react-icons/ci";
-import UserPic from '../../assets/profile_pic.jpg';
 import { IoVideocamOutline } from "react-icons/io5";
-import { Conversation } from "../../App";
+import useConversationStore from "../../store/conversation-store";
 
-type ChatLogHeaderProps = {
-    activeChat:Conversation
-}
-
-const ChatLogHeader = ({activeChat}:ChatLogHeaderProps) => {
+const ChatLogHeader = () => {
+    const activeChat = useConversationStore((state) => state.activeChat);
+    
     return ( 
         <section className="flex items-center justify-between w-full border-b border-gray-200">
             <div className="flex items-center gap-4 p-4 cursor-pointer">
-                <img src={activeChat.users[0].profilePic} alt="User Picture" className='rounded-full w-12 h-12 object-cover' />
+                <img src={activeChat!.users[0].profilePic} alt="User Picture" className='rounded-full w-12 h-12 object-cover' />
                 <div className='flex flex-col'>
-                    <h2 className='text-base font-bold'>{activeChat.users[0].username}</h2>
+                    <h2 className='text-base font-bold'>{activeChat!.users[0].username}</h2>
                     <p className='text-sm text-[#52be80] font-normal'>Online</p>
                 </div>
             </div>

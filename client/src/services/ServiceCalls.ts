@@ -12,6 +12,14 @@ export const GET_CONVERSATIONS = (userId:string) => {
                     profilePic
                     username
                 }
+                lastMessage {
+                    id
+                    conversationId
+                    userId
+                    text
+                    createdAt
+                    updatedAt
+                }
             }
         }
     `;
@@ -30,6 +38,20 @@ export const GET_MESSAGES = () => {
         }
     `;
 }
+export const GET_CONVERSATION = () => {
+    return gql`
+        query Conversation($conversationId: ID!) {
+            Conversation(conversationId: $conversationId) {
+                id
+                lastMessage {
+                    id
+                    text
+                    createdAt
+                }
+            }
+        }
+    `;
+}
 export const MESSAGE_SUBSCRIPTION = () => {
     return gql`
         subscription Subscription {
@@ -37,6 +59,7 @@ export const MESSAGE_SUBSCRIPTION = () => {
                 text
                 userId
                 conversationId
+                createdAt
             }
         }
     `;
