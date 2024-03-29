@@ -39,9 +39,11 @@ function App() {
 
   return (
     <main className='flex'>
-      <SideMenu />
+      <SideMenu/>
 
-      <section className='grid grid-cols-master-detail w-full'>
+      <section className='grid w-full h-screen
+               lg:grid-cols-master-detail-desktop
+               sm:grid-cols-master-detail-mobile-tablet'>
         <ChatList/>
         {activeChat && 
           <ChatLog/>

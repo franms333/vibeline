@@ -32,3 +32,5 @@ export type SubscribedConversation = {
     id:string,
     lastMessage: LastMessage
 }
+
+export type MenuButton = 'globe' | 'chat' | 'video' | 'music' | 'calendar';

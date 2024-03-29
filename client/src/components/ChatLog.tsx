@@ -99,8 +99,9 @@ const ChatLog = () => {
             <ChatLogHeader/>
 
             <div 
-            className="grow flex flex-col h-1 overflow-y-auto px-20 pb-4
-            scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full">
+            className="grow flex flex-col h-1 overflow-y-auto  pb-4
+            scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full
+            lg:px-20 sm:px-5">
                 
                 {log.length > 0 && log.map((message)=>(
                     <ChatBubble 

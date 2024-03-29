@@ -1,20 +1,21 @@
 import { FaReact } from "react-icons/fa";
-import { IoGlobeOutline, IoChatbubbleEllipsesOutline, IoVideocamOutline, IoMusicalNotesOutline, IoCalendarOutline, IoSettingsOutline, IoLogOutOutline  } from "react-icons/io5";
+import { IoCalendarOutline, IoChatbubbleEllipsesOutline, IoGlobeOutline, IoLogOutOutline, IoMusicalNotesOutline, IoSettingsOutline, IoVideocamOutline } from "react-icons/io5";
 import UserPic from '../assets/profile_pic.jpg';
-import { useState } from "react";
+import useConversationStore from "../store/conversation-store";
+import { MenuButton } from "../shared/Types";
 
-type SideMenuButton = 'globe' | 'chat' | 'video' | 'music' | 'calendar';
 
 const SideMenu = () => {
-    const [activeButton, setActiveButton] = useState<SideMenuButton>('chat');
-    // const [activeButton, setActiveButton] = useState<string>('chat');
+    const activeButton = useConversationStore((state) => state.activeMenuButton);
+    const setActiveButton = useConversationStore((state) => state.setActiveMenuButton);
 
-    function handleActiveButton(button:SideMenuButton) {
+    function handleActiveButton(button:MenuButton) {
         setActiveButton(button);
     }
     
     return ( 
-        <section className='h-screen max-w-20 flex flex-col items-center py-5 p-2 bg-[#FAFAFA]'>
+        <section className='h-screen max-w-20 flex flex-col items-center py-5 p-2 bg-[#FAFAFA] 
+                lg:flex sm:hidden'>
             <div className='flex flex-col gap-3'>
                 <FaReact 
                 className='text-[#27AE60] text-5xl cursor-pointer'

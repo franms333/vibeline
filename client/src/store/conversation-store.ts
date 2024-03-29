@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Conversation } from '../shared/Types'
+import { Conversation, MenuButton } from '../shared/Types'
 
 interface ConversationsState {
     loggedUser: string | null,
@@ -7,7 +7,9 @@ interface ConversationsState {
     conversations: Conversation[],
     setConversations: (conversations:Conversation[]) => void,
     activeChat: Conversation | null,
-    setActiveChat: (conversation:Conversation) => void
+    setActiveChat: (conversation:Conversation) => void,
+    activeMenuButton: MenuButton;
+    setActiveMenuButton: (button:MenuButton) => void
 }
 
 const useConversationStore = create<ConversationsState>((set) => ({
@@ -16,7 +18,9 @@ const useConversationStore = create<ConversationsState>((set) => ({
         conversations: [],
         setConversations: (conversations:Conversation[]) => set(() => ({ conversations: [...conversations] })),
         activeChat: null,
-        setActiveChat: (conversation:Conversation) => set(() => ({ activeChat: conversation }))
+        setActiveChat: (conversation:Conversation) => set(() => ({ activeChat: conversation })),
+        activeMenuButton: 'chat',
+        setActiveMenuButton: (button:MenuButton) => set(()=>({activeMenuButton:button}))
     }
 ));
 

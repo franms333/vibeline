@@ -8,6 +8,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split } from '@a
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import ErrorPage from './pages/ErrorPage.tsx';
 
 // URL for subscriptions calls
 const wsLink = new GraphQLWsLink(createClient({
@@ -36,15 +38,22 @@ const splitLink = split(
   httpLink,
 );
 
+// Apollo Client instance
 const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),
 });
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <ErrorPage />
+  }
+])
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <RouterProvider router={router} />
   </ApolloProvider>,
 )
