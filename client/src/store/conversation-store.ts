@@ -7,7 +7,7 @@ interface ConversationsState {
     conversations: Conversation[],
     setConversations: (conversations:Conversation[]) => void,
     activeChat: Conversation | null,
-    setActiveChat: (conversation:Conversation) => void,
+    setActiveChat: (conversation:Conversation | null) => void,
     activeMenuButton: MenuButton;
     setActiveMenuButton: (button:MenuButton) => void
 }
@@ -18,7 +18,7 @@ const useConversationStore = create<ConversationsState>((set) => ({
         conversations: [],
         setConversations: (conversations:Conversation[]) => set(() => ({ conversations: [...conversations] })),
         activeChat: null,
-        setActiveChat: (conversation:Conversation) => set(() => ({ activeChat: conversation })),
+        setActiveChat: (conversation:Conversation | null) => set(() => ({ activeChat: conversation })),
         activeMenuButton: 'chat',
         setActiveMenuButton: (button:MenuButton) => set(()=>({activeMenuButton:button}))
     }

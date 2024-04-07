@@ -33,4 +33,6 @@ export type SubscribedConversation = {
     lastMessage: LastMessage
 }
 
-export type MenuButton = 'globe' | 'chat' | 'video' | 'music' | 'calendar';
+export type Theme = 'light' | 'dark';
+
+export type MenuButton = 'newChat' | 'chat' | 'video' | 'music' | 'calendar';

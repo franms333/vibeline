@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useRef } from "react";
 import { FiPaperclip } from "react-icons/fi";
+import { IoPaperPlane } from "react-icons/io5";
 import { ADD_MESSAGE } from "../../services/ServiceCalls";
 import useConversationStore from "../../store/conversation-store";
 
@@ -17,19 +18,21 @@ const MessageTextArea = () => {
     const [addMessage, {data}] = useMutation(POST_MESSAGE);
 
     function handleNewMessage() {
-        addMessage({ variables: { messageInput: {
-                    text: messageRef.current?.value,
-                    userId: loggedUser,
-                    conversationId: activeChat?.id
+        if( messageRef.current!.value !== ''){
+            addMessage({ variables: { messageInput: {
+                        text: messageRef.current?.value,
+                        userId: loggedUser,
+                        conversationId: activeChat?.id
+                    } 
                 } 
-            } 
-        });
-
-        messageRef.current!.value = '';
+            });
+    
+            messageRef.current!.value = '';
+        }
     }
 
     return ( 
-        <section className="flex items-center w-full border-t border-gray-300 py-4 px-4 mt-auto">
+        <section className="flex items-center w-full border-t border-[--borders-secondary] py-4 px-4 mt-auto">
             <FiPaperclip className="text-3xl text-gray-500 mr-4 cursor-pointer transition-colors duration-100 hover:text-gray-600"/>
             <textarea
             ref={messageRef} 
@@ -40,13 +43,18 @@ const MessageTextArea = () => {
                 }
             }}
             rows={3} 
-            className="grow outline-none bg-gray-100 p-2 pl-4 rounded-2xl resize-none
-            focus:bg-gray-300
+            className="grow outline-none bg-[--text-input-primary] p-2 pl-4 rounded-2xl resize-none
+            focus:bg-[--text-input-secondary]
             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full" 
             placeholder="Type your message here..."/>
             <p
             onClick={handleNewMessage} 
-            className="text-xl text-[#27ae60] mx-4 cursor-pointer transition-colors duration-100 hover:text-[#52be80]">Send</p>
+            className="text-xl text-[#27ae60] mx-4 cursor-pointer transition-colors duration-100 hover:text-[#52be80]
+            md:block xs:hidden">Send</p>
+            <IoPaperPlane 
+            onClick={handleNewMessage} 
+            className="text-3xl text-[#27ae60] ml-2 md:hidden xs:block"
+            />
         </section>
     );
 }

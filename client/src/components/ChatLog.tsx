@@ -95,13 +95,14 @@ const ChatLog = () => {
     
 
     return ( 
-        <section className='flex flex-col'>
+        <section className={`flex flex-col 
+                            xs:${activeChat ? 'flex' : 'hidden'}`}>
             <ChatLogHeader/>
 
             <div 
-            className="grow flex flex-col h-1 overflow-y-auto  pb-4
+            className="grow flex flex-col min-h-1 overflow-y-auto pb-4
             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full
-            lg:px-20 sm:px-5">
+            lg:px-20 xs:px-5">
                 
                 {log.length > 0 && log.map((message)=>(
                     <ChatBubble 

@@ -1,10 +1,15 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
+    screens: {
+      'xs': '375px',
+      ...defaultTheme.screens,
+    },
     extend: {
       gridTemplateColumns: {
         'master-detail-desktop': 'minmax(350px, 1fr) 3fr',
@@ -18,5 +23,8 @@ export default {
     require('tailwind-scrollbar')({ nocompatible: true, preferredStrategy: 'pseudoelements' }),
     require("daisyui")
   ],
+  daisyui: {
+    themes: ['light', 'dark'],
+  }
 }
 

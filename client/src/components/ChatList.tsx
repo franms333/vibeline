@@ -6,9 +6,11 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 const ChatList = () => {
     const Chats = useConversationStore((state) => state.conversations);
+    const activeChat = useConversationStore((state) => state.activeChat);
     
     return ( 
-        <section className="flex flex-col border-r border-gray-200 relative">
+        // <section className={`flex flex-col border-r border-gray-200 relative lg:flex xs:${!activeChat ? 'flex' : 'hidden'}`}>
+        <section className={`flex flex-col border-r border-[--borders-secondary] relative lg:flex xs:${!activeChat ? 'flex' : 'hidden'}`}>
 
             <ListHeader />
 
@@ -28,9 +30,9 @@ const ChatList = () => {
                 </p>
             </div>
 
-            {/* START NEW CHAT BUTTON FOR MOBILE/TABLET */}
-            <div className="rounded-2xl p-2 bg-[#3db670] absolute bottom-20 right-2 transition-colors duration-100 hover:bg-[#31925a]
-                            lg:hidden sm:block">
+            {/* START NEW CHAT BUTTON FOR MOBILE */}
+            <div className={`rounded-2xl p-2 bg-[#3db670] absolute bottom-16 right-2 transition-colors duration-100 hover:bg-[#31925a]
+                            md:hidden`}>
                 <IoChatboxEllipsesOutline 
                 className="text-4xl text-white hover:"
                 />

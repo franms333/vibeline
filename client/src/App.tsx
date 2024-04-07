@@ -38,12 +38,11 @@ function App() {
   },[data]);
 
   return (
-    <main className='flex'>
+    <main className='flex overflow-hidden'>
       <SideMenu/>
 
       <section className='grid w-full h-screen
-               lg:grid-cols-master-detail-desktop
-               sm:grid-cols-master-detail-mobile-tablet'>
+               lg:grid-cols-master-detail-desktop'>
         <ChatList/>
         {activeChat && 
           <ChatLog/>
