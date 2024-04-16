@@ -1,6 +1,19 @@
 import { gql } from "@apollo/client";
 
 // QUERIES
+export const LOGIN = () => {
+    return gql`
+        query Query($username: String!) {
+            login(username: $username) {
+                token
+                tokenExpiration
+                userId
+                username
+                profilePic
+            }
+        }
+    `
+}
 export const GET_CONVERSATIONS = (userId:string) => {
     return gql`query {
             Conversations(userId: "${userId}") {
@@ -24,6 +37,7 @@ export const GET_CONVERSATIONS = (userId:string) => {
         }
     `;
 }
+
 export const GET_MESSAGES = () => {
     return gql`
         query Query($conversationId: ID!) {

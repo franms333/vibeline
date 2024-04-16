@@ -6,6 +6,7 @@ import ChatLog from './components/ChatLog';
 import SideMenu from './components/SideMenu';
 import { GET_CONVERSATIONS } from './services/ServiceCalls';
 import useConversationStore from './store/conversation-store';
+import LoginPage from './pages/LoginPage';
 
 
 
@@ -39,7 +40,8 @@ function App() {
 
   return (
     <main className='flex overflow-hidden'>
-      <SideMenu/>
+      <LoginPage />
+      {/* <SideMenu/>
 
       <section className='grid w-full h-screen
                lg:grid-cols-master-detail-desktop'>
@@ -47,7 +49,7 @@ function App() {
         {activeChat && 
           <ChatLog/>
         }
-      </section>
+      </section> */}
     </main>
   )
 }
