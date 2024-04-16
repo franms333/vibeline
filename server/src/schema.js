@@ -66,6 +66,7 @@ export const typeDefs = gql`
     type AuthData {
         userId: ID!
         username: String!
+        profilePic: String!
         token: String!
         tokenExpiration: Int!
     }
