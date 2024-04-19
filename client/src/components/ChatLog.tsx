@@ -19,11 +19,13 @@ const ChatLog = () => {
     // Apollo Client Hook for invoking writeQuery function
     const client = useApolloClient();
 
-    const activeChat = useConversationStore((state) => state.activeChat);
-
+    // Zustand States and Functions
     const loggedUser = useConversationStore((state) => state.loggedUser);
+    const activeChat = useConversationStore((state) => state.activeChat);
     const conversations = useConversationStore((state) => state.conversations);
     const setConversations = useConversationStore((state) => state.setConversations);
+
+    const theme = useConversationStore((state) => state.theme);
 
     // Local state for the chatlog of the currently active chat
     const [log, setLog] = useState<Message[]>([]);     
@@ -52,7 +54,7 @@ const ChatLog = () => {
 
                 let unreadMessages:number = 0;
 
-                if(newMessage.userId !== loggedUser && newMessage.conversationId !== activeChat?.id) {
+                if(newMessage.userId !== loggedUser?.id && newMessage.conversationId !== activeChat?.id) {
                     if(chatListItem!.unreadMessages) {
                         unreadMessages = chatListItem!.unreadMessages + 1;
                     } else {
@@ -91,8 +93,7 @@ const ChatLog = () => {
         return () => {
             unsubscribe();
         }
-    },[data]);
-    
+    },[data]);   
 
     return ( 
         <section className={`flex flex-col 
@@ -100,9 +101,11 @@ const ChatLog = () => {
             <ChatLogHeader/>
 
             <div 
-            className="grow flex flex-col min-h-1 overflow-y-auto pb-4
+            className="grow flex flex-col min-h-1 overflow-y-auto pb-4 relative
             scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-400 scrollbar-thumb-rounded-full
-            lg:px-20 xs:px-5">
+            lg:px-20 xs:px-5"
+            >
+                <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-chat-pattern-darkmode opacity-15' : 'bg-chat-pattern-lightmode opacity-80'}`}></div>
                 
                 {log.length > 0 && log.map((message)=>(
                     <ChatBubble 

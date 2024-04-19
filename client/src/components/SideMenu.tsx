@@ -9,29 +9,30 @@ import {
     IoVideocamOutline
 } from "react-icons/io5";
 import { RiChatNewLine } from "react-icons/ri";
-
-import { useEffect, useState } from "react";
-import UserPic from '../assets/profile_pic.jpg';
-import { MenuButton, Theme } from "../shared/Types";
+import { MenuButton } from "../shared/Types";
 import useConversationStore from "../store/conversation-store";
 
+
 const SideMenu = () => {
-    const [theme, setTheme] = useState<Theme>('dark');
+    
+    // Zustand States
+    const loggedUser = useConversationStore((state) => state.loggedUser);
+    const setLoggedUser = useConversationStore((state) => state.setLoggedUser);
     const activeButton = useConversationStore((state) => state.activeMenuButton);
     const setActiveButton = useConversationStore((state) => state.setActiveMenuButton);
+
+    const theme = useConversationStore((state) => state.theme);
+    const setTheme = useConversationStore((state) => state.setTheme);
 
     function handleActiveButton(button:MenuButton) {
         setActiveButton(button);
     }    
 
     const toggleTheme = () => {
+        document.querySelector('html')!.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
         setTheme(theme === 'dark' ? 'light' : 'dark');
         handleClick();
     };
-    // initially set the theme and "listen" for changes to apply them to the HTML tag
-    useEffect(() => {
-        document.querySelector('html')!.setAttribute('data-theme', theme);
-    }, [theme]);
 
     const handleClick = () => {
         const elem = document.activeElement as HTMLElement;
@@ -39,6 +40,10 @@ const SideMenu = () => {
           elem?.blur();
         }
     };
+
+    const handleLogout = () => {
+        setLoggedUser(null);
+    }
     
     return ( 
         <section className={`h-screen max-w-20 flex-col items-center py-5 p-2 
@@ -47,7 +52,7 @@ const SideMenu = () => {
                 <FaReact 
                 className='text-[#27AE60] text-5xl cursor-pointer'
                 />
-                <img className='w-12 h-12 rounded-full object-cover cursor-pointer' src={UserPic} alt="User Profile Pic for chat application" />
+                <img className='w-12 h-12 rounded-full object-cover cursor-pointer' src={loggedUser?.profilePic} alt="User Profile Pic for chat application" />
             </div>
 
             <span className='w-12 border-t-2 border-[--borders] mt-6'/>
@@ -67,7 +72,7 @@ const SideMenu = () => {
                     ${activeButton === 'chat' ? 'text-[--icons-primary]' : ''}`}/>
                 </button>
 
-                <button 
+                {/* <button 
                 className={`rounded-2xl p-2 ${activeButton === 'video' ? 'bg-[#3db670] shadow-lg' : ''}`}  
                 onClick={() => handleActiveButton('video')}>
                     <IoVideocamOutline className={`text-[#27AE60] text-4xl transition-colors duration-100 cursor-pointer 
@@ -86,7 +91,7 @@ const SideMenu = () => {
                 onClick={() => handleActiveButton('calendar')}>
                     <IoCalendarOutline className={`text-[#27AE60] text-4xl transition-colors duration-100 cursor-pointer 
                     ${activeButton === 'calendar' ? 'text-[--icons-primary]' : ''}`}/>
-                </button>
+                </button> */}
             </nav>
 
             <div className='flex flex-col items-center gap-6 mt-auto'>
@@ -102,7 +107,7 @@ const SideMenu = () => {
                         </li>
                     </ul>
                 </div>
-                <IoLogOutOutline  className='text-gray-400 text-4xl cursor-pointer transition-colors duration-100 hover:text-gray-500'/>
+                <IoLogOutOutline onClick={handleLogout} className='text-gray-400 text-4xl cursor-pointer transition-colors duration-100 hover:text-gray-500'/>
             </div>
         </section>
     );

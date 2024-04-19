@@ -8,8 +8,13 @@ import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split } from '@a
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import ErrorPage from './pages/ErrorPage.tsx';
+import LoginPage from './pages/LoginPage.tsx';
+import ChatOverview from './pages/ChatOverview.tsx';
+import useConversationStore from './store/conversation-store.ts';
+import ProtectedRoute from './utils/ProtectedRoute.tsx';
+import NewChat from './pages/NewChat.tsx';
 
 // URL for subscriptions calls
 const wsLink = new GraphQLWsLink(createClient({
@@ -47,10 +52,31 @@ const client = new ApolloClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <LoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
     errorElement: <ErrorPage />
-  }
-])
+  },
+  {
+    path: "/main",
+    element: 
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>,
+    errorElement: <ErrorPage />
+  },  
+  {
+    path: "/newChat",
+    element: 
+      <ProtectedRoute>
+        <NewChat />
+      </ProtectedRoute>,
+    errorElement: <ErrorPage />
+  }  
+]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <ApolloProvider client={client}>

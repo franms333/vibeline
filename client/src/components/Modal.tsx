@@ -7,7 +7,6 @@ const Modal = ({title, message}:ModalProps) => {
 
     return ( 
         <>
-            {/* <button className="btn" onClick={()=>document.getElementById('custom_modal').showModal()}>open modal</button> */}
             <dialog id="custom_modal" className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">{title}</h3>

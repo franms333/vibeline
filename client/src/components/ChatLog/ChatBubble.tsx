@@ -13,8 +13,8 @@ const ChatBubble = ({message}:ChatBubbleProps) => {
     const activeChat = useConversationStore((state) => state.activeChat);
 
     return ( 
-        <div className={`chat ${message.userId !== loggedUser ? 'chat-start' : 'chat-end'}`}>
-            {message.userId !== loggedUser &&
+        <div className={`chat ${message.userId !== loggedUser?.id ? 'chat-start' : 'chat-end'}`}>
+            {message.userId !== loggedUser?.id &&
             <div className="chat-image avatar">
                 <div className="w-10 rounded-full">
                     <img alt="User Pic" src={activeChat!.users[0].profilePic} />

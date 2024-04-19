@@ -2,7 +2,7 @@ export type User = {
     id:string;
     username:string;
     profilePic:string;
-  }
+}
   
 export type Conversation = {
     id:string;

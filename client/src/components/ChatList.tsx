@@ -9,7 +9,6 @@ const ChatList = () => {
     const activeChat = useConversationStore((state) => state.activeChat);
     
     return ( 
-        // <section className={`flex flex-col border-r border-gray-200 relative lg:flex xs:${!activeChat ? 'flex' : 'hidden'}`}>
         <section className={`flex flex-col border-r border-[--borders-secondary] relative lg:flex xs:${!activeChat ? 'flex' : 'hidden'}`}>
 
             <ListHeader />

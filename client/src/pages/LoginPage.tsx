@@ -1,21 +1,35 @@
-import LoginPic from '../assets/login_pic.jpg';
-import LoginSmallPic from '../assets/login_mobile_tablet_pic.jpg';
-import useWindowSize from '../hooks/useWindowsSize';
-import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useLazyQuery } from '@apollo/client';
-import { LOGIN } from '../services/ServiceCalls';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LoginSmallPic from '../assets/login_mobile_tablet_pic.jpg';
+import LoginPic from '../assets/login_pic.jpg';
+import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
+import useWindowSize from '../hooks/useWindowsSize';
+import { GET_CONVERSATIONS, LOGIN } from '../services/ServiceCalls';
+import { User } from '../shared/Types';
+import useConversationStore from '../store/conversation-store';
 
 const LoginPage = () => {
-    const [loginPic, setLoginPic] = useState<any>();
-    const {width} = useWindowSize();
-    const inputRef = useRef<HTMLInputElement>(null);
 
+    // Zustand States and Functions
+    const loggedUser = useConversationStore((state) => state.loggedUser);
+    const setLoggedUser = useConversationStore((state) => state.setLoggedUser);
+    const setConversations = useConversationStore((state) => state.setConversations);
+
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [loginPic, setLoginPic] = useState<any>();
     const [username, setUsername] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    // Hook for measuring the device's width
+    const {width} = useWindowSize();
 
     // Modal props
     const [title, setTitle] = useState<string>();
     const [message, setMessage] = useState<string>();
+    const navigate = useNavigate();
 
     async function handleOnSubmit(event:FormEvent<HTMLFormElement>){
         event.preventDefault();
@@ -33,14 +47,21 @@ const LoginPage = () => {
 
         inputRef.current!.value = '';
 
+        setIsLoading(true);
         onLogin();        
     }
 
-    const FETCH_USER = LOGIN();
+    const GET_LOGGED_USER = LOGIN();
     const [onLogin, { data, error }] = useLazyQuery(
-        FETCH_USER,
-        
+        GET_LOGGED_USER,        
         {variables: {username: username}, fetchPolicy: 'no-cache'}
+    );
+
+    // Query for fetching all conversations filtered by user
+    const FETCH_CONVERSATIONS = GET_CONVERSATIONS(loggedUser?.id!);
+    const [onFetchConversations, { data:ConversationsData, error:ConversationsError }] = useLazyQuery(
+        FETCH_CONVERSATIONS, 
+        {fetchPolicy:'no-cache'}
     );
 
     useEffect(()=>{
@@ -52,20 +73,40 @@ const LoginPage = () => {
     },[width]);
 
     useEffect(() => {
-        if(data){
-            console.log(data);
+        if(data){            
+            const userData: User = {
+                id: data.login.userId,
+                username: data.login.username,
+                profilePic: data.login.profilePic
+            };
+            setLoggedUser(userData);            
         }
         if(error){
+            setIsLoading(false);
             const modal = document.getElementById('custom_modal') as any;
             modal!.showModal();
             setTitle('Error');
             setMessage(error.message);
         }
-    }, [onLogin, data, error])
+    }, [data, error]);
+
+    useEffect(()=>{
+        if(loggedUser){
+            onFetchConversations()
+        }
+    },[loggedUser]);
+
+    useEffect(()=>{
+        if(ConversationsData){
+            setConversations(ConversationsData.Conversations);
+            setIsLoading(false);
+            navigate("/main");
+        }
+    },[ConversationsData, ConversationsError])
 
     return ( 
         <>
-            <main className="overflow-hidden max-h-screen relative brightness-95">
+            <main className={`overflow-hidden max-h-screen relative  ${isLoading ? 'brightness-50' : 'brightness-95'} `}>
                 <img 
                 src={loginPic} 
                 alt="Two cartoonish girls having a coffee in a wild area"
@@ -109,6 +150,7 @@ const LoginPage = () => {
                     </div>
                 </form>
             </main>
+            {isLoading && <LoadingSpinner />}
             <Modal 
             key={title}
             title={title}

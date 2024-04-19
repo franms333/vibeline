@@ -6,6 +6,7 @@ type ChatListItemProps = {
 }
 
 const ChatListItem = ({chatItem}:ChatListItemProps) => {
+    const activeChat = useConversationStore((state) => state.activeChat);
     const setActiveChat = useConversationStore((state) => state.setActiveChat);
 
     const Conversations = useConversationStore((state) => state.conversations);
@@ -34,10 +35,9 @@ const ChatListItem = ({chatItem}:ChatListItemProps) => {
     return ( 
         <li 
         onClick={handleChatSelect}
-        // className="flex items-center gap-4 max-h-14 py-8  cursor-pointer hover:bg-gray-300
-        className="flex items-center gap-4 max-h-14 py-8  cursor-pointer hover:bg-[--text-input-secondary]
+        className={`flex items-center gap-4 max-h-14 py-8 cursor-pointer ${chatItem.id === activeChat?.id ? 'bg-[--text-input-secondary]' : ''} hover:bg-[--text-input-secondary]
                     lg:pl-5 pr-6
-                    xs:px-5">
+                    xs:px-5`}>
             <img src={chatItem.users[0].profilePic} alt="User Picture" className='rounded-full w-10 h-10 object-cover shrink-0' />
 
 

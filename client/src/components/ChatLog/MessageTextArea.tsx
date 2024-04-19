@@ -21,7 +21,7 @@ const MessageTextArea = () => {
         if( messageRef.current!.value !== ''){
             addMessage({ variables: { messageInput: {
                         text: messageRef.current?.value,
-                        userId: loggedUser,
+                        userId: loggedUser?.id,
                         conversationId: activeChat?.id
                     } 
                 } 

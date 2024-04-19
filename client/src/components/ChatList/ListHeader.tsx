@@ -1,22 +1,17 @@
-import { IoSearch } from "react-icons/io5";
-import UserPic from '../../assets/profile_pic.jpg';
-import { IoEllipsisVertical, IoSettingsOutline, IoLogOutOutline, IoInvertMode} from "react-icons/io5";
-import { Theme } from "../../shared/Types";
-import { useEffect, useState } from "react";
+import { IoEllipsisVertical, IoInvertMode, IoLogOutOutline, IoSearch, IoSettingsOutline } from "react-icons/io5";
+import useConversationStore from "../../store/conversation-store";
 
 const ListHeader = () => {
-    const [theme, setTheme] = useState<Theme>('dark');
-    
+    // ZUSTAND STATES AND FUNCTIONS
+    const theme = useConversationStore((state) => state.theme);
+    const setTheme = useConversationStore((state) => state.setTheme);
+    const loggedUser = useConversationStore((state) => state.loggedUser);
+
     const toggleTheme = () => {
+        document.querySelector('html')!.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
         setTheme(theme === 'dark' ? 'light' : 'dark');
         handleClick();
     };
-
-
-    // initially set the theme and "listen" for changes to apply them to the HTML tag
-    useEffect(() => {
-        document.querySelector('html')!.setAttribute('data-theme', theme);
-    }, [theme]);
 
     const handleClick = () => {
         const elem = document.activeElement as HTMLElement;
@@ -34,7 +29,7 @@ const ListHeader = () => {
             <div className="items-center justify-between
                             md:hidden xs:flex">
                 <div className="flex items-center gap-3">
-                    <img src={UserPic} alt="User Pic" className="rounded-full w-10 h-10 object-cover shrink-0" />
+                    <img src={loggedUser?.profilePic} alt="User Pic" className="rounded-full w-10 h-10 object-cover shrink-0" />
                     <h2 className="text-2xl font-bold">Vibeline</h2>
                 </div>
 

@@ -14,6 +14,7 @@ export const LOGIN = () => {
         }
     `
 }
+
 export const GET_CONVERSATIONS = (userId:string) => {
     return gql`query {
             Conversations(userId: "${userId}") {
@@ -52,6 +53,7 @@ export const GET_MESSAGES = () => {
         }
     `;
 }
+
 export const GET_CONVERSATION = () => {
     return gql`
         query Conversation($conversationId: ID!) {
@@ -66,6 +68,19 @@ export const GET_CONVERSATION = () => {
         }
     `;
 }
+
+export const GET_USER = () => {
+    return gql`
+        query Query($username: String!) {
+            SearchUser(username: $username) {
+                id
+                profilePic
+                username
+            }
+        }
+    `
+}
+
 export const MESSAGE_SUBSCRIPTION = () => {
     return gql`
         subscription Subscription {
