@@ -4,8 +4,13 @@ import { ConversationModel } from '../../models/conversation.js';
 import { UserModel } from '../../models/user.js';
 
 class MessageAPI extends RESTDataSource {
-  async getUser(userId) {
-    const user = await UserModel.findOne({_id: userId});
+  // async getUser(userId) {
+  //   const user = await UserModel.findOne({_id: userId});
+  //   return user;
+  // }
+  async getUser(username) {
+    // const user = await UserModel.findOne({username: username});
+    const user = await UserModel.find({ username: { $regex: username, $options: 'i' } });
     return user;
   }
   async getMessages(conversationId) {

@@ -14,6 +14,9 @@ export const typeDefs = gql`
 
         # Query for getting one conversation
         Conversation(conversationId: ID!): Conversation
+
+        # Query for searching a user
+        SearchUser(username: String!): [User]!
     }
     type Mutation {
         # Mutation for creating a user

@@ -59,6 +59,9 @@ export const resolvers = {
         },
         Conversation: async(_, {conversationId}, {dataSources}) => {
             return dataSources.messageAPI.getConversation(conversationId);
+        },
+        SearchUser: async(_, {username}, {dataSources}) => {
+            return dataSources.messageAPI.getUser(username);
         }
     },
     Mutation: {
