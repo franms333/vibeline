@@ -84,13 +84,15 @@ export const resolvers = {
                 return error
             }
         },
-        createConversation: async (_, {conversationInput}) => {
+        createConversation: async (_, {conversationInput}, {dataSources}) => {
             try {
                 const conversation = new ConversationModel({
                     users:[...conversationInput.users]
                 });              
+
                 const result = await conversation.save();
-                return {id:result._doc._id, ...result._doc}
+                // return {id:result._doc._id, ...result._doc}
+                return dataSources.messageAPI.getConversation(result._doc._id);
             } catch (error) {
                 return error;
             }            

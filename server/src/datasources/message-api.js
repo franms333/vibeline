@@ -36,9 +36,17 @@ class MessageAPI extends RESTDataSource {
     const conversation = await ConversationModel.findById(conversationId);
     const lastMessage = await MessageModel.findOne({ conversationId: conversationId }).sort({ createdAt: -1 }).limit(1);
 
+    const parsedUsers = await Promise.all(
+        conversation.users.map(async (userId)=>{
+          const user = await UserModel.findOne({_id: userId});
+          return user;
+      })
+    )
+
     return {
       id: conversation._id,
       ...conversation.toObject(),
+      users: parsedUsers,
       lastMessage
     }
   }

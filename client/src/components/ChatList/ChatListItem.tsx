@@ -33,27 +33,29 @@ const ChatListItem = ({chatItem}:ChatListItemProps) => {
     }
 
     return ( 
-        <li 
-        onClick={handleChatSelect}
-        className={`flex items-center gap-4 max-h-14 py-8 cursor-pointer ${chatItem.id === activeChat?.id ? 'bg-[--text-input-secondary]' : ''} hover:bg-[--text-input-secondary]
-                    lg:pl-5 pr-6
-                    xs:px-5`}>
-            <img src={chatItem.users[0].profilePic} alt="User Picture" className='rounded-full w-10 h-10 object-cover shrink-0' />
+        <>
+            {chatItem.lastMessage && <li 
+            onClick={handleChatSelect}
+            className={`flex items-center gap-4 max-h-14 py-8 cursor-pointer ${chatItem.id === activeChat?.id ? 'bg-[--text-input-secondary]' : ''} hover:bg-[--text-input-secondary]
+                        lg:pl-5 pr-6
+                        xs:px-5`}>
+                <img src={chatItem.users[0].profilePic} alt="User Picture" className='rounded-full w-10 h-10 object-cover shrink-0' />
 
 
-            <div className='flex flex-col w-full'>
-                <div className='flex justify-between items-center'>
-                    <h2 className='text-base font-bold'>{chatItem.users[0].username}</h2>
-                    <p className='text-sm text-gray-400'>{`${new Date(chatItem.lastMessage.createdAt).getHours()}:${new Date(chatItem.lastMessage.createdAt).getMinutes()}`}</p>
+                <div className='flex flex-col w-full'>
+                    <div className='flex justify-between items-center'>
+                        <h2 className='text-base font-bold'>{chatItem.users[0].username}</h2>
+                        <p className='text-sm text-gray-400'>{`${new Date(chatItem.lastMessage.createdAt).getHours()}:${new Date(chatItem.lastMessage.createdAt).getMinutes()}`}</p>
+                    </div>
+                    <div className='flex justify-between items-center'>
+                        <h2 className='text-base text-gray-400 whitespace-nowrap truncate max-w-full'>{chatItem.lastMessage.text}</h2>
+                        <p className={`py-0.5 px-1.5 bg-[#27AE60] text-[10px] text-white rounded-full ${chatItem.unreadMessages && chatItem.unreadMessages !== 0 ? 'block' : 'hidden'}`}>
+                            {chatItem.unreadMessages}
+                        </p>
+                    </div>
                 </div>
-                <div className='flex justify-between items-center'>
-                    <h2 className='text-base text-gray-400 whitespace-nowrap truncate max-w-full'>{chatItem.lastMessage.text}</h2>
-                    <p className={`py-0.5 px-1.5 bg-[#27AE60] text-[10px] text-white rounded-full ${chatItem.unreadMessages && chatItem.unreadMessages !== 0 ? 'block' : 'hidden'}`}>
-                        {chatItem.unreadMessages}
-                    </p>
-                </div>
-            </div>
-        </li>
+            </li>}
+        </>
     );
 }
  

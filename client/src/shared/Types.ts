@@ -9,8 +9,8 @@ export type Conversation = {
     users: User[];
     createdAt:string;
     updatedAt:string;
-    lastMessage: Message;
-    unreadMessages?: number
+    lastMessage: Message | null;
+    unreadMessages?: number | null;
 }
 
 export type Message = {

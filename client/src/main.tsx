@@ -1,20 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, split } from '@apollo/client';
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, split } from '@apollo/client';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
 
 // Imports for subscription
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import { createClient } from 'graphql-ws';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ErrorPage from './pages/ErrorPage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
-import ChatOverview from './pages/ChatOverview.tsx';
-import useConversationStore from './store/conversation-store.ts';
-import ProtectedRoute from './utils/ProtectedRoute.tsx';
 import NewChat from './pages/NewChat.tsx';
+import ProtectedRoute from './utils/ProtectedRoute.tsx';
 
 // URL for subscriptions calls
 const wsLink = new GraphQLWsLink(createClient({

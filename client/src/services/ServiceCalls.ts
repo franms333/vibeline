@@ -95,6 +95,27 @@ export const MESSAGE_SUBSCRIPTION = () => {
 }
 
 // MUTATIONS
+export const CREATE_CONVERSATION = () => {
+    return gql`
+        mutation Mutation($conversationInput: ConversationInput!) {
+            createConversation(conversationInput: $conversationInput) {
+                id
+                createdAt
+                updatedAt
+                lastMessage {
+                    userId
+                    text
+                    conversationId
+                }
+                users {
+                    id
+                    profilePic
+                    username
+                }
+            }
+        }
+    `;
+}
 export const ADD_MESSAGE = () => {
     return gql`
         mutation Mutation($messageInput: MessageInput!) {

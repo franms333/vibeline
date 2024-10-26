@@ -31,7 +31,7 @@ const SideMenu = () => {
     const toggleTheme = () => {
         document.querySelector('html')!.setAttribute('data-theme', theme === 'dark' ? 'light' : 'dark');
         setTheme(theme === 'dark' ? 'light' : 'dark');
-        handleClick();
+        // handleClick();
     };
 
     const handleClick = () => {
